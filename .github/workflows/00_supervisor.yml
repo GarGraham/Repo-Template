@@ -2,8 +2,9 @@ name: supervisor
 on:
   workflow_call:
     inputs:
-      mode: {required: true, type: string}
-      artifact_name: {required: false, type: string, default: handoff}
+      mode: { required: true, type: string }
+      artifact_name: { required: false, type: string, default: handoff }
+      depth: { required: false, type: string, default: light }
 jobs:
   supervise:
     runs-on: ubuntu-latest
@@ -14,12 +15,13 @@ jobs:
         uses: actions/download-artifact@v4
         with: { name: ${{ inputs.artifact_name }}, path: . }
       - name: Run Supervisor
-        run: python3 supervisor/run.py --mode "${{ inputs.mode }}" --in handoff.json --out supervisor_out.json
+        run: python3 supervisor/run.py --mode "${{ inputs.mode }}" --in handoff.json --out supervisor_out.json --depth "${{ inputs.depth }}"
       - name: Gate on verdict
         run: |
           python3 - << 'PY'
           import json,sys
           j=json.load(open('supervisor_out.json'))
+          print('Supervisor model:', j.get('used_model'), '| depth:', j.get('depth'))
           print('Supervisor verdict:', j['verdict'], '-', j.get('reason',''))
           if j['verdict']!='approve':
               sys.exit(1)

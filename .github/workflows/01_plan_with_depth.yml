@@ -1,0 +1,28 @@
+name: agent-plan-with-depth
+on:
+  workflow_dispatch:
+    inputs:
+      depth:
+        description: "Choose analysis depth"
+        required: true
+        type: choice
+        options: [light, thorough]
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build initial handoff.json (stub)
+        run: echo '{"title":"feature","notes":"No schema changes"}' > handoff.json
+      - name: Supervisor Preflight
+        uses: ./.github/workflows/00_supervisor.yml
+        with:
+          mode: preflight
+          depth: ${{ github.event.inputs.depth }}
+      - name: Planner (stub)
+        run: echo '{"files":["src/foo.ts"],"tests":["tests/foo.spec.ts"]}' > handoff.json
+      - name: Supervisor Validate Plan
+        uses: ./.github/workflows/00_supervisor.yml
+        with:
+          mode: validate
+          depth: ${{ github.event.inputs.depth }}
