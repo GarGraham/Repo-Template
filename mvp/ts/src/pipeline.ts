@@ -1,6 +1,7 @@
 import { MqttSource } from "./adapters/source/mqtt";
 import { HttpSink } from "./adapters/sink/http_push";
 import { parseDevicePayload } from "./parse";
+import { toExternalCamel } from "./util/casing";
 
 export class Pipeline {
   source: any; sink: any;
@@ -8,7 +9,8 @@ export class Pipeline {
   async runOnce(){
     for (const raw of this.source.stream()){
       const reading = parseDevicePayload(raw);
-      await this.sink.send(reading);
+      const payload = toExternalCamel(reading);
+      await this.sink.send(payload);
     }
   }
 }

@@ -16,7 +16,7 @@ parse:
 
 sink:
   kind: http_push
-  url: http://localhost:3000/ingest
+  url: http://localhost:3000/anything/ingest
 
 observability:
   health_port: 8080
