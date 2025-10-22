@@ -1,0 +1,18 @@
+{
+  "name": "device-to-cloud-mvp",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "vitest run -u",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.0.5"
+  }
+}

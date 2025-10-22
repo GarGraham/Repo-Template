@@ -1,0 +1,13 @@
+name: agent-gate
+on:
+  workflow_dispatch:
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Final Gate
+        run: echo '{}' > handoff.json
+      - name: Supervisor Final Gate
+        uses: ./.github/workflows/00_supervisor.yml
+        with: { mode: gate }

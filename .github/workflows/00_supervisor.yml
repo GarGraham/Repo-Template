@@ -1,0 +1,28 @@
+name: supervisor
+on:
+  workflow_call:
+    inputs:
+      mode: {required: true, type: string}
+      artifact_name: {required: false, type: string, default: handoff}
+jobs:
+  supervise:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download artifact (optional)
+        if: ${{ inputs.artifact_name != '' }}
+        uses: actions/download-artifact@v4
+        with: { name: ${{ inputs.artifact_name }}, path: . }
+      - name: Run Supervisor
+        run: python3 supervisor/run.py --mode "${{ inputs.mode }}" --in handoff.json --out supervisor_out.json
+      - name: Gate on verdict
+        run: |
+          python3 - << 'PY'
+          import json,sys
+          j=json.load(open('supervisor_out.json'))
+          print('Supervisor verdict:', j['verdict'], '-', j.get('reason',''))
+          if j['verdict']!='approve':
+              sys.exit(1)
+          PY
+      - uses: actions/upload-artifact@v4
+        with: { name: supervisor_out, path: supervisor_out.json }

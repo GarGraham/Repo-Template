@@ -1,0 +1,21 @@
+XS:
+  max_files: 2
+  max_loc: 80
+S:
+  max_files: 4
+  max_loc: 200
+M:
+  max_files: 8
+  max_loc: 400
+  discourage: true
+
+coverage_thresholds:
+  lines: 0.75
+  branches: 0.50
+
+forbidden_paths:
+  - infra/secrets/*
+  - scripts/deploy/*
+  - '**/*.pem'
+  - '**/*.key'
+  - '**/*.crt'

@@ -1,0 +1,17 @@
+name: mvp-build
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { name: handoff, path: . }
+      - name: Builder (stub)
+        run: echo '{"diff":"+ mvp/app/pipeline.py"}' > handoff.json
+      - name: Supervisor Judge Reviews
+        uses: ./.github/workflows/00_supervisor.yml
+        with: { mode: judge }
+      - uses: actions/upload-artifact@v4
+        with: { name: handoff, path: handoff.json }

@@ -1,0 +1,7 @@
+allowed:
+  - src/**
+  - app/**
+  - mvp/**
+  - tests/**
+  - docs/**
+  - .github/workflows/**

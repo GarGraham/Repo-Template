@@ -1,0 +1,19 @@
+project:
+  name: device-to-cloud-mvp
+  language: typescript
+  deploy: docker_only
+
+source:
+  kind: mqtt
+  broker_url: mqtt://localhost:1883
+  topic: devices/+/telemetry
+  qos: 1
+
+parse:
+  spec: docs/API_SPEC.sample.yaml
+  model_name: DeviceReading
+  mapping: mvp/ts/config/mapping.yaml
+
+sink:
+  kind: http_push
+  url: http://localhost:3000/ingest

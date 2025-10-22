@@ -1,0 +1,29 @@
+name: agent-plan
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+jobs:
+  plan:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.comment.body, '/plan')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build initial handoff.json (stub)
+        run: echo '{"title":"feature","notes":"No schema changes"}' > handoff.json
+
+      - name: Supervisor Preflight
+        uses: ./.github/workflows/00_supervisor.yml
+        with: { mode: preflight }
+
+      - name: Planner (stub)
+        run: echo '{"files":["src/foo.ts"],"tests":["tests/foo.spec.ts"],"risk":"low","rollback":"revert commit"}' > handoff.json
+
+      - name: Supervisor Validate Plan
+        uses: ./.github/workflows/00_supervisor.yml
+        with: { mode: validate }
+
+      - name: Upload handoff
+        uses: actions/upload-artifact@v4
+        with: { name: handoff, path: handoff.json }

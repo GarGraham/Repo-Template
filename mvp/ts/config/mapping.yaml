@@ -1,0 +1,3 @@
+rename: { deviceId: device_id }
+units: { temperatureC: C }
+enums: { status: { OK: OK, WARN: WARN, FAIL: FAIL } }

@@ -1,0 +1,14 @@
+name: agent-review
+on:
+  workflow_dispatch:
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with: { name: handoff, path: . }
+      - name: Supervisor Judge Reviews (re-run)
+        uses: ./.github/workflows/00_supervisor.yml
+        with: { mode: judge }

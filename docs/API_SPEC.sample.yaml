@@ -1,0 +1,15 @@
+openapi: 3.0.0
+info:
+  title: Device Payload
+  version: 0.1.0
+paths: {}
+components:
+  schemas:
+    DeviceReading:
+      type: object
+      required: [deviceId, timestamp]
+      properties:
+        deviceId: { type: string }
+        timestamp: { type: string, format: date-time }
+        temperatureC: { type: number }
+        status: { type: string, enum: [OK, WARN, FAIL] }

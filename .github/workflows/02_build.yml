@@ -1,0 +1,27 @@
+name: agent-build
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download plan artifact
+        uses: actions/download-artifact@v4
+        with: { name: handoff, path: . }
+
+      - name: Builder (stub)
+        run: |
+          mkdir -p src tests
+          echo 'export const x=1;' > src/foo.ts
+          echo 'test("ok",()=>expect(1).toBe(1))' > tests/foo.spec.ts
+          echo '{"diff":"+ src/foo.ts","tests":"+ tests/foo.spec.ts"}' > handoff.json
+
+      - name: Supervisor Judge Reviews
+        uses: ./.github/workflows/00_supervisor.yml
+        with: { mode: judge }
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with: { name: handoff, path: handoff.json }

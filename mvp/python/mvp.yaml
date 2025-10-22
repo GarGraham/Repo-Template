@@ -1,0 +1,32 @@
+project:
+  name: device-to-cloud-mvp
+  language: python
+  deploy: docker_only
+
+source:
+  kind: mqtt
+  broker_url: mqtt://localhost:1883
+  topic: devices/+/telemetry
+  qos: 1
+
+parse:
+  spec: docs/API_SPEC.sample.yaml
+  model_name: DeviceReading
+  mapping: mvp/python/config/mapping.yaml
+
+sink:
+  kind: http_push
+  url: http://localhost:3000/ingest
+
+observability:
+  health_port: 8080
+  metrics: prometheus
+
+logging:
+  level: INFO
+  redact_fields: ["payload.credentials"]
+
+budgets:
+  max_loc: 300
+  max_files: 8
+  must_add_tests: true

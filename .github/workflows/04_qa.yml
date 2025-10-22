@@ -1,0 +1,13 @@
+name: agent-qa
+on:
+  workflow_dispatch:
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: QA (stub results)
+        run: echo '{"coverage":0.85}' > handoff.json
+      - name: Supervisor Forecast QA
+        uses: ./.github/workflows/00_supervisor.yml
+        with: { mode: forecast }
